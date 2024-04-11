@@ -1,0 +1,10 @@
+body {
+  font-family: "Courier New", Courier, monospace;
+  text-align: center;
+}
+
+#board {
+  background-image: url(./img/background.png);
+  background-repeat: repeat;
+  border-bottom: 1px solid black;
+}
