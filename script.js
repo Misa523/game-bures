@@ -1,41 +1,42 @@
 
+
 //board
 let board;
 let boardWidth = 750;
 let boardHeight = 250;
 let context;
 
-//dino
-let dinoWidth = 88;
-let dinoHeight = 94;
-let dinoX = 50;
-let dinoY = boardHeight - dinoHeight;
-let dinoImg;
+//tucnak
+let tucnakWidth = 88;
+let tucnakHeight = 100;
+let tucnakX = 50;
+let tucnakY = boardHeight - tucnakHeight;
+let tucnakImg;
 
-let dino = {
-    x : dinoX,
-    y : dinoY,
-    width : dinoWidth,
-    height : dinoHeight
+let tucnak = {
+    x : tucnakX,
+    y : tucnakY,
+    width : tucnakWidth,
+    height : tucnakHeight
 }
 
-//cactus
-let cactusArray = [];
+//ledovec
+let ledovecArray = [];
 
-let cactus1Width = 34;
-let cactus2Width = 69;
-let cactus3Width = 102;
+let ledovec1Width = 37;
+let ledovec2Width = 70;
+let ledovec3Width = 110;
 
-let cactusHeight = 70;
-let cactusX = 700;
-let cactusY = boardHeight - cactusHeight;
+let ledovecHeight = 70;
+let ledovecX = 700;
+let ledovecY = boardHeight - ledovecHeight;
 
-let cactus1Img;
-let cactus2Img;
-let cactus3Img;
+let ledovec1Img;
+let ledovec2Img;
+let ledovec3Img;
 
 //physics
-let velocityX = -8; //cactus moving left speed
+let velocityX = -8; //ledovec moving left speed
 let velocityY = 0;
 let gravity = .4;
 
@@ -49,28 +50,28 @@ window.onload = function() {
 
     context = board.getContext("2d"); //used for drawing on the board
 
-    //draw initial dinosaur
+    //draw initial tucnaksaur
     // context.fillStyle="green";
-    // context.fillRect(dino.x, dino.y, dino.width, dino.height);
+    // context.fillRect(tucnak.x, tucnak.y, tucnak.width, tucnak.height);
 
-    dinoImg = new Image();
-    dinoImg.src = "./img/tucnak.png";
-    dinoImg.onload = function() {
-        context.drawImage(dinoImg, dino.x, dino.y, dino.width, dino.height);
+    tucnakImg = new Image();
+    tucnakImg.src = "./img/tucnak.png";
+    tucnakImg.onload = function() {
+        context.drawImage(tucnakImg, tucnak.x, tucnak.y, tucnak.width, tucnak.height);
     }
 
-    cactus1Img = new Image();
-    cactus1Img.src = "./img/cactus1.png";
+    ledovec1Img = new Image();
+    ledovec1Img.src = "./img/ledovec1.png";
 
-    cactus2Img = new Image();
-    cactus2Img.src = "./img/cactus2.png";
+    ledovec2Img = new Image();
+    ledovec2Img.src = "./img/ledovec2.png";
 
-    cactus3Img = new Image();
-    cactus3Img.src = "./img/cactus3.png";
+    ledovec3Img = new Image();
+    ledovec3Img.src = "./img/ledovec3.png";
 
     requestAnimationFrame(update);
-    setInterval(placeCactus, 1000); //1000 milliseconds = 1 second
-    document.addEventListener("keydown", moveDino);
+    setInterval(placeledovec, 1000); //1000 milliseconds = 1 second
+    document.addEventListener("keydown", movetucnak);
 }
 
 function update() {
@@ -80,86 +81,82 @@ function update() {
     }
     context.clearRect(0, 0, board.width, board.height);
 
-    //dino
+    //tucnak
     velocityY += gravity;
-    dino.y = Math.min(dino.y + velocityY, dinoY); //apply gravity to current dino.y, making sure it doesn't exceed the ground
-    context.drawImage(dinoImg, dino.x, dino.y, dino.width, dino.height);
+    tucnak.y = Math.min(tucnak.y + velocityY, tucnakY); //apply gravity to current tucnak.y, making sure it doesn't exceed the ground
+    context.drawImage(tucnakImg, tucnak.x, tucnak.y, tucnak.width, tucnak.height);
 
-    //cactus
-    for (let i = 0; i < cactusArray.length; i++) {
-        let cactus = cactusArray[i];
-        cactus.x += velocityX;
-        context.drawImage(cactus.img, cactus.x, cactus.y, cactus.width, cactus.height);
+    //ledovec
+    for (let i = 0; i < ledovecArray.length; i++) {
+        let ledovec = ledovecArray[i];
+        ledovec.x += velocityX;
+        context.drawImage(ledovec.img, ledovec.x, ledovec.y, ledovec.width, ledovec.height);
 
-        if (detectCollision(dino, cactus)) {
+        if (detectCollision(tucnak, ledovec)) {
             gameOver = true;
-            dinoImg.src = "./img/tucnakdead.png";
-            dinoImg.onload = function() {
-                context.drawImage(dinoImg, dino.x, dino.y, dino.width, dino.height);
+            tucnakImg.src = "./img/tucnakdead.png";
+            tucnakImg.onload = function() {
+                context.drawImage(tucnakImg, tucnak.x, tucnak.y, tucnak.width, tucnak.height);
             }
         }
     }
 
     //score
     context.fillStyle="black";
-    context.font="30px courier";
+    context.font="20px courier";
     score++;
     context.fillText(score, 5, 20);
-    
 }
 
-function moveDino(e) {
+function movetucnak(e) {
     if (gameOver) {
         return;
     }
 
-    if ((e.code == "Space" || e.code == "ArrowUp") && dino.y == dinoY) {
+    if ((e.code == "Space" || e.code == "ArrowUp") && tucnak.y == tucnakY) {
         //jump
-        velocityY = -13;
+        velocityY = -10;
     }
-    
-    else if (e.code == "ArrowDown" && dino.y == dinoY) {
+    else if (e.code == "ArrowDown" && tucnak.y == tucnakY) {
         //duck
     }
 
 }
 
-
-
-function placeCactus() {
+function placeledovec() {
     if (gameOver) {
         return;
     }
 
-    //place cactus
-    let cactus = {
+    //place ledovec
+    let ledovec = {
         img : null,
-        x : cactusX,
-        y : cactusY,
+        x : ledovecX,
+        y : ledovecY,
         width : null,
-        height: cactusHeight
+        height: ledovecHeight
     }
 
-    let placeCactusChance = Math.random(); //0 - 0.9999...
+    let placeledovecChance = Math.random(); //0 - 0.9999...
 
-    if (placeCactusChance > .90) { //10% you get cactus3
-        cactus.img = cactus3Img;
-        cactus.width = cactus3Width;
-        cactusArray.push(cactus);
+    if (placeledovecChance > .90) { //10% you get ledovec3
+        ledovec.img = ledovec3Img;
+        ledovec.width = ledovec3Width;
+        ledovecArray.push(ledovec);
     }
-    else if (placeCactusChance > .70) { //30% you get cactus2
-        cactus.img = cactus2Img;
-        cactus.width = cactus2Width;
-        cactusArray.push(cactus);
+    else if (placeledovecChance > .70) { //30% you get ledovec2
+        ledovec.img = ledovec2Img;
+        ledovec.width = ledovec2Width;
+        ledovecArray.push(ledovec);
     }
-    else if (placeCactusChance > .50) { //50% you get cactus1
-        cactus.img = cactus1Img;
-        cactus.width = cactus1Width;
-        cactusArray.push(cactus);
+    else if (placeledovecChance > .50) { //50% you get ledovec1
+        ledovec.img = ledovec1Img;
+        ledovec.width = ledovec1Width;
+        ledovecArray.push(ledovec);
     }
 
-    if (cactusArray.length > 5) {
-        cactusArray.shift(); //remove the first element from the array so that the array doesn't constantly grow
+    if (ledovecArray.length > 5) {
+        ledovecArray.shift(); //remove the first element from the array so that the array doesn't constantly grow
     }
 }
 
